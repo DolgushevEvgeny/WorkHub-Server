@@ -10,6 +10,7 @@ var utils = require("./utils").utils;
 var loginApi = require("./login").login;
 var reservationApi = require("./reservation").reservation;
 var officeApi = require("./office").office;
+var citiesApi = require("./cities").cities;
 
 var app = express();
 

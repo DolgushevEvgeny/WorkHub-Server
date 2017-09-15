@@ -11,31 +11,25 @@ officeApi.get = function(userID, city, response) {
         if (record) {
           var officesCollection = db.collection('offices');
           officesCollection.find({'city': city}).toArray(function(err, records) {
+            var meta = {}, answer = {};
             if (records) {
               console.log('Кол-во офисов: ' + records.length);
-              if (records.length) {
-                answer.records = records;
-                answer.code = 1;
-                db.close();
-                sendResponse(answer, response);
-              } else {
-                answer.code = 2;
-                answer.message = 'В данном городе пока еще нет офисов.';
-                db.close();
-                sendResponse(answer, response);
-              }
-            } else {
-              answer.code = 2;
-              answer.message = 'В данном городе пока еще нет офисов.';
+              meta.success = true;
+              meta.error = '';
+              answer.meta = meta;
+              answer.data = records;
+              console.log(answer);
               db.close();
-              sendResponse(answer, response);
+              responseApi.sendResponse(answer, response);
+            } else {
+              meta.success = false;
+              meta.error = 'В данном городе пока еще нет офисов';
+              answer.meta = meta;
+              answer.data = {};
+              db.close();
+              responseApi.sendResponse(answer, response);
             }
           });
-        } else {
-          answer.code = 0;
-          answer.message = 'Такого пользователя не существует.';
-          db.close();
-          sendResponse(answer, response);
         }
       });
     }
