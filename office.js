@@ -1,5 +1,6 @@
 var MongoClient = require('mongodb').MongoClient;
 var responseApi = require('./response').responseApi;
+var ObjectId = require('mongodb').ObjectID;
 var officeApi = {};
 
 officeApi.get = function(userID, city, response) {
@@ -12,7 +13,7 @@ officeApi.get = function(userID, city, response) {
           var officesCollection = db.collection('offices');
           officesCollection.find({'city': city}).toArray(function(err, records) {
             var meta = {}, answer = {};
-            if (records) {
+            if (records.length) {
               console.log('Кол-во офисов: ' + records.length);
               meta.success = true;
               meta.error = '';
@@ -23,7 +24,7 @@ officeApi.get = function(userID, city, response) {
               responseApi.sendResponse(answer, response);
             } else {
               meta.success = false;
-              meta.error = 'В данном городе пока еще нет офисов';
+              meta.error = 'В данном городе пока еще нет офисов. Выберите другой город.';
               answer.meta = meta;
               answer.data = {};
               db.close();
